@@ -226,6 +226,7 @@
           <name>CCDefines</name>
           <state>USE_HAL_DRIVER</state>
           <state>STM32F407xx</state>
+          <state>TARGET_IS_TEMPEST_RB1</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -356,6 +357,9 @@
           <state>$PROJ_DIR$/../Drivers/CMSIS/Device/ST/STM32F4xx/Include</state>
           <state>$PROJ_DIR$/../Drivers/CMSIS/Include</state>
           <state>$PROJ_DIR$/../Middlewares/Third_Party/FatFs/src</state>
+          <state>$PROJ_DIR$/../MyLibs/DataHandler</state>
+          <state>$PROJ_DIR$/../MyLibs/SSD1306</state>
+          <state>$PROJ_DIR$/../MyLibs/list</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -376,7 +380,7 @@
         <option>
           <name>CCOptStrategy</name>
           <version>0</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCOptLevelSlave</name>
@@ -439,7 +443,7 @@
         <option>
           <name>CCOptStrategySlave</name>
           <version>0</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCGuardCalls</name>
@@ -770,7 +774,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$/stm32f407xx_flash.icf</state>
+          <state>$PROJ_DIR$\stm32f407xx_flash.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1044,6 +1048,39 @@
     </group>
     <group>
       <name>User</name>
+      <group>
+        <name>DataHandler</name>
+        <file>
+          <name>$PROJ_DIR$\..\MyLibs\DataHandler\data_handler.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\MyLibs\DataHandler\data_handler.h</name>
+        </file>
+      </group>
+      <group>
+        <name>List</name>
+        <file>
+          <name>$PROJ_DIR$\..\MyLibs\list\list.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\MyLibs\list\list.h</name>
+        </file>
+      </group>
+      <group>
+        <name>SSD1306</name>
+        <file>
+          <name>$PROJ_DIR$\..\MyLibs\SSD1306\fonts.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\MyLibs\SSD1306\fonts.h</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\MyLibs\SSD1306\ssd1306.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\MyLibs\SSD1306\ssd1306.h</name>
+        </file>
+      </group>
       <file>
         <name>$PROJ_DIR$\..\Src\main.c</name>
       </file>
@@ -1057,6 +1094,9 @@
         <name>$PROJ_DIR$\..\Src\can.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\Src\dma.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\Src\bsp_driver_sd.c</name>
       </file>
       <file>
@@ -1064,6 +1104,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Src\fatfs.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Src\fatfs_platform.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Src\i2c.c</name>
@@ -1178,6 +1221,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\option\syscall.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\option\ccsbcs.c</name>
       </file>
     </group>
   </group>
