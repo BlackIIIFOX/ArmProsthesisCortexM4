@@ -486,10 +486,9 @@ int main(void)
   {
     configuration.StateMotorDriver = true;
     Display_Print("Motor init", 0, 30);
+    HAL_Delay(TimeDelayInitMs);
   }
-  
-  HAL_Delay(TimeDelayInitMs);
-  
+    
   /* Иницилизация протоколо приемо-передачи. */
   Create_Data_Receive();
   CreatePackageBuffer(&receivePackage);
@@ -498,19 +497,18 @@ int main(void)
   HAL_UART_Receive_IT(&huart2, &dataRx, 1);
   
   /* Иницилизация SD карты. */
-//  if (Flash_Init())
-//  {
-//    configuration.StateSDCard = true;
-//    Display_Print("SD init", 0, 30);
-//  }
-//  else
-//  {
-//    Display_Print("SD error", 0, 30);
-//    Error_Handler();
-//    while(1);
-//  }
-//  HAL_Delay(TimeDelayInitMs);
-  
+  if (Flash_Init())
+  {
+    configuration.StateSDCard = true;
+    Display_Print("SD init", 0, 30);
+    HAL_Delay(TimeDelayInitMs);
+  }
+  else
+  {
+    Display_Print("SD error", 0, 30);
+    Error_Handler();
+    while(1);
+  }
   
   Display_Print("Success", 0, 30);
   HAL_Delay(5000);
@@ -523,9 +521,8 @@ int main(void)
   {
     uint8_t str[] = "USART Transmit\r\n";
     HAL_UART_Transmit(&huart2,str,16,0xFFFF);
-    HAL_Delay(500);
     
-    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15); 
+    //HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15); 
     
     //    if(HAL_CAN_GetTxMailboxesFreeLevel(&hcan1))
     //    {
@@ -538,13 +535,9 @@ int main(void)
       RecognizePackage(currentPackage);
     }
     
-    
-    // HAL_StatusTypeDef status =  HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
-    // TxData[7] = TxData[7] + 1;
-    //    CAN_TxHeaderTypeDef can_header;
-    //    can_header.DLC = 1;
-    //    HAL_CAN_AddTxMessage(&hcan1, );
-    // HAL_Delay(1000);
+    HAL_StatusTypeDef status =  HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+    TxData[7] = TxData[7] + 1;
+    HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -603,6 +596,7 @@ void HAL_CAN_TxMailBox0CompleteCallback(CAN_HandleTypeDef *hcan)
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
   HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxData);
+  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15); 
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
