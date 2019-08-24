@@ -26,6 +26,7 @@
 #include "fatfs.h"
 #include "i2c.h"
 #include "sdio.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -172,8 +173,14 @@ typedef struct {
 
 /* CAN PV */
 
-/* Текущая конфигурация протеза */
+/* Текущая конфигурация протеза. */
 ConfigModel configuration;
+
+/* Кол-во милисекунд, прошедших со времени старта МК. */
+uint64_t TimeFromStartInMillis;
+
+/* Кол-во милисекунд, продеших со времени последнего приема с драйвера моторов. */
+uint64_t TimeLastReceiveMotorDriverInMillis;
 
 /* CAN bus filter configuration. */
 CAN_FilterTypeDef sFilterConfig;
@@ -198,13 +205,13 @@ uint32_t TxMailbox;
 /* File system object for SD card logical drive */
 FATFS SDFatFs;
 
-/* File object */
+/* File object. */
 FIL MyFile;
 
-/* SD logical drive path */
+/* SD logical drive path. */
 extern char SDPath[4];
 
-/* SD file open result*/
+/* SD file open result. */
 FRESULT fr;
 
 // Time system
@@ -225,6 +232,12 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+
+/* Объявление функций. */
+
+/* Реализация функций. */
+
 
 /** 
 * @brief Выполняет инициализацию Emg датчика №1. А именно провреяет состояние пина,
@@ -314,7 +327,7 @@ bool CheckI2CDevice(uint8_t address)
 /**
 * @brief Выполняет необходимую программную иницилизацию CAN и 
 * переменных для работы с ней.
-* @retval None
+* @retval Успешность инициализации CAN шины.
 */
 bool CAN_Init()
 {
@@ -365,6 +378,30 @@ bool CAN_Init()
   //HAL_CAN_Receive_IT(&hcan1, 0);
   
   return true;
+}
+
+/**
+* @brief Выполняет необходимую программную иницилизацию CAN шины и провреяет
+* состояние подключения драйвера моторов, ожидая приход состояния по CAN шине
+* в течении 3 секунд.
+* @retval Состояние подключения драйвера моторов.
+*/
+bool DriverMotorInit()
+{
+  /* Сначала иницилизациия CAN шины для обмена с контроллером моторов. */
+  if (CAN_Init())
+  {
+    uint64_t timeStartWait = TimeFromStartInMillis;
+    while (TimeFromStartInMillis - timeStartWait < 3000)
+    {
+      if (TimeLastReceiveMotorDriverInMillis != 0)
+      {
+        return true;
+      }
+    }
+  }
+  
+  return false;
 }
 
 /**
@@ -453,7 +490,11 @@ int main(void)
   MX_SDIO_SD_Init();
   MX_FATFS_Init();
   MX_USART2_UART_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
+  
+  /* Запуск таймера для расчет времени со старта системы. */
+  HAL_TIM_Base_Start_IT(&htim4);
   
   /* Иницилизация дисплея и вывод сообщения о состоянии запуска системы. */
   HAL_Delay(3000);
@@ -481,14 +522,20 @@ int main(void)
     HAL_Delay(TimeDelayInitMs);
   }
   
-  /* Иницилизациия CAN шины для обмена с контроллером моторов. */
-  if (CAN_Init())
+  /* Инициализация драйвера моторов. */
+  if (DriverMotorInit())
   {
     configuration.StateMotorDriver = true;
     Display_Print("Motor init", 0, 30);
     HAL_Delay(TimeDelayInitMs);
   }
-    
+  else
+  {
+    Display_Print("Motor error", 0, 30);
+    Error_Handler();
+    while(1);
+  }
+  
   /* Иницилизация протоколо приемо-передачи. */
   Create_Data_Receive();
   CreatePackageBuffer(&receivePackage);
@@ -588,17 +635,22 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_CAN_TxMailBox0CompleteCallback(CAN_HandleTypeDef *hcan)
-{
-  
-}
 
+/**
+* @brief  Обработчик принятия сообщения по CAN.
+* @param  hcan CAN, вызвавший прерывание.
+*/
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
   HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxData);
+  TimeLastReceiveMotorDriverInMillis = TimeFromStartInMillis;
   HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15); 
 }
 
+/**
+* @brief  Обработчик принятия сообщения по UART.
+* @param  huart UART, вызвавший прерывание.
+*/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (huart == &huart2)
@@ -614,6 +666,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     HAL_UART_Receive_IT(&huart2, &dataRx, 1);
   }
 }
+
+/* 
+* Прерывание таймеров.
+* htim4 отвечает за тактирование времени со старта системы и прерывается кажду 1мс.
+* @param htim таймер, вызвавший прерывание.
+*/
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim)
+{
+  if (htim == &htim4)
+  {
+    TimeFromStartInMillis++;
+  }
+}
+
 /* USER CODE END 4 */
 
 /**

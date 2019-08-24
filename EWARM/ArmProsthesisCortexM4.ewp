@@ -1115,6 +1115,9 @@
         <name>$PROJ_DIR$\..\Src\sdio.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$/../Src/tim.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\Src\usart.c</name>
       </file>
       <file>
