@@ -38,6 +38,7 @@
 #include "stdbool.h"
 #include "list.h"
 #include "string.h"
+#include "gesture_model.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,66 +61,7 @@ enum TypeWork {
   MixedMode
 };
 
-/* Информация о жесте. */
-typedef struct {
-  
-  /* Время изменения жеста. */
-  long TimeChange;
-  
-  /* Состояние итерируемости жеста. */
-  bool IterableGesture;
-  
-  /* Количество повторений жеста. */
-  uint8_t NumberOfGestureRepetitions;
-  
-  /* Кол-во действий в жесте. */
-  uint8_t NumberOfMotions;
-  
-} InfoGestureModel;
 
-/* Единичное действие жеста. Содержит поции пальцев и кисти, а так же задержку, 
-необходимую перед следующим действием. */
-typedef struct {
-  
-  /* Положение указательного пальца в градусах (0-180). */
-  uint8_t PointerFinger;
-  
-  /* Положение среднего пальца в градусах (0-180). */
-  uint8_t MiddleFinger;
-  
-  /* Положение безымянного пальца в градусах (0-180). */
-  uint8_t RingFinder;
-  
-  /* Положение мезинца в градусах (0-180). */
-  uint8_t LittleFinger;
-  
-  /* Положение большого пальца в градусах (0-180). */
-  uint8_t ThumbFinger;
-  
-  /* Положение кисти в градусах (0-350). */
-  uint16_t StatePosBrush;
-  
-  /* Задержка между действиями в милисекундах. */
-  uint16_t DelMotion;
-  
-} MotionModel;
-
-/* Жест, исполняемый протезом */
-typedef struct {
-  
-  /* Id жеста в Guid. */
-  uint8_t Id[16];
-  
-  /* Имя жеста */
-  char* Name;
-  
-  /* Информация о жесте. */
-  InfoGestureModel InfoGesture;
-  
-  /* Коллекция действий жеста. */
-  list ListMotions;
-  
-} GestureModel;
 
 /* Информация о текущей конфигурации и работе протеза. */
 typedef struct {
