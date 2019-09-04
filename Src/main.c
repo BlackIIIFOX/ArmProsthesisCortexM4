@@ -39,6 +39,7 @@
 #include "list.h"
 #include "string.h"
 #include "gesture_model.h"
+#include "binary_reader.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

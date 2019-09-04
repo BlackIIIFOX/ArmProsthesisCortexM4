@@ -7,10 +7,12 @@
 #include <stdio.h>
 
 /* Информация о жесте. */
+#define SIZE_OF_ID 16
+
 typedef struct {
   
   /* Время изменения жеста. */
-  long TimeChange;
+  uint32_t TimeChange;
   
   /* Состояние итерируемости жеста. */
   bool IterableGesture;
@@ -54,7 +56,7 @@ typedef struct {
 typedef struct {
   
   /* Id жеста в Guid. */
-  uint8_t Id[16];
+  uint8_t Id[SIZE_OF_ID];
   
   /* Имя жеста */
   char* Name;
@@ -71,15 +73,19 @@ GestureModel* GestureModel_Init();
 
 GestureModel* GestureModel_InitFromBinary(uint8_t* binaryData);
 
+bool GestureModel_IdEquals(GestureModel* gesture, uint8_t* other_id);
+
+bool GestureModel_NameEquals(GestureModel* gesture, char* other_name);
+
 MotionModel* MotionModel_Init();
 
 void MotionModel_Destroy(void *motion);
 
-uint8_t* GestureModel_SerializeGesture(GestureModel* gesture);
+uint8_t* GestureModel_SerializeGesture(GestureModel* gesture, int* sizeOfArray);
 
-GestureModel* GestureModel_DeserializeGesture(uint8_t* binaryData);
+GestureModel* GestureModel_DeserializeGesture(uint8_t* binaryData, int sizeOfArray);
 
-void GestureModel_Destroy(GestureModel* gesture);
+void GestureModel_Destroy(void* gesture);
 
  
 #endif

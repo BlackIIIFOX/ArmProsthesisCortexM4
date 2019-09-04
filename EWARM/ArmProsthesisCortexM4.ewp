@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.30.1.17146</state>
+                    <state>8.32.3.20186</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>39</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>39</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>27</version>
                     <state>39</state>
                 </option>
                 <option>
@@ -215,7 +215,7 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>34</version>
+                <version>35</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -360,8 +360,9 @@
                     <state>$PROJ_DIR$/../MyLibs/DataHandler</state>
                     <state>$PROJ_DIR$/../MyLibs/SSD1306</state>
                     <state>$PROJ_DIR$/../MyLibs/list</state>
-                    <state>$PROJ_DIR$/../MyLibs/GestureModel</state>
+                    <state>$PROJ_DIR$/../MyLibs/Gesture</state>
                     <state>$PROJ_DIR$/../MyLibs/Binary/BinaryReader</state>
+                    <state>$PROJ_DIR$/../MyLibs/Binary/BinaryWriter</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -474,6 +475,10 @@
                 <option>
                     <name>IccRTTI2</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>OICompilerExtraOption</name>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -695,7 +700,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>21</version>
+                <version>22</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1011,6 +1016,10 @@
                     <name>IlinkTrustzoneImportLibraryOut</name>
                     <state>ArmProsthesisCortexM4_import_lib.o</state>
                 </option>
+                <option>
+                    <name>OILinkExtraOption</name>
+                    <state>1</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1061,6 +1070,15 @@
                         <name>$PROJ_DIR$\..\MyLibs\Binary\BinaryReader\binary_reader.h</name>
                     </file>
                 </group>
+                <group>
+                    <name>BinaryWriter</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\MyLibs\Binary\BinaryWriter\binary_writer.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\MyLibs\Binary\BinaryWriter\binary_writer.h</name>
+                    </file>
+                </group>
             </group>
             <group>
                 <name>DataHandler</name>
@@ -1072,12 +1090,18 @@
                 </file>
             </group>
             <group>
-                <name>GestureModel</name>
+                <name>Gesture</name>
                 <file>
-                    <name>$PROJ_DIR$\..\MyLibs\GestureModel\gesture_model.c</name>
+                    <name>$PROJ_DIR$\..\MyLibs\Gesture\gesture_model.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\MyLibs\GestureModel\gesture_model.h</name>
+                    <name>$PROJ_DIR$\..\MyLibs\Gesture\gesture_model.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\MyLibs\Gesture\gesture_repository.c</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\..\MyLibs\Gesture\gesture_repository.h</name>
                 </file>
             </group>
             <group>
